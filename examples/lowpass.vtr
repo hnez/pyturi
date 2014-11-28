@@ -1,0 +1,21 @@
+   LOAD 0;
+   STORE R[0];
+   STORE R[1];
+
+LOOP:
+   READ;
+
+   STORE R[2];
+   LOAD R[0];
+   STORE R[1];
+   LOAD R[2];
+
+   DIV 10;
+   STORE R[0];
+   LOAD R[1];
+   MUL 9;
+   DIV 10;
+   ADD R[0];
+   STORE R[0];
+   WRITE;
+   JUMP LOOP;
