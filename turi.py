@@ -64,17 +64,16 @@ def interpret (prog, itpeio, otpeio):
     bz+=oplen
     
     if (opcode=='READ'):
-      rde= itpeio.read(4)
-      if(len(rde) != 4):
-        print ("End of Tape")
-        return()
-      acc =rde[0]<<24
-      acc|=rde[1]<<16
-      acc|=rde[2]<<8
-      acc|=rde[3]<<0
+      rde= itpeio.readline()
+      if not rde:
+        raise Exception ("End of tape")
+        
+      rde=rde.lstrip().rstrip().rstrip(',;:')
+      
+      acc=(int(rde))      
       
     elif (opcode=='WRITE'):
-      wrt= bytearray([(acc>>24)&0xFF, (acc>>16)&0xFF, (acc>>8)&0xFF, (acc>>0)&0xFF])
+      wrt=str(acc) + '\n'
       otpeio.write(wrt)
       
     elif (opcode=='LOAD'):
@@ -114,15 +113,15 @@ def interpret (prog, itpeio, otpeio):
       if (acc==0): bz=arg
     elif (opcode=='HALT'):
       return
-      g
+
 def main (argv):
   if (len(argv) != 4):
     print ('{} prog.ctr itape.tpe otape.tpe'.format(argv[0]))
     exit (1)
     
   progio = open(argv[1], 'rb')
-  itpeio = open(argv[2], 'rb')
-  otpeio = open(argv[3], 'wb')
+  itpeio = open(argv[2], 'r')
+  otpeio = open(argv[3], 'w')
   
   prog = progio.read()
   
