@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import struct
+
 """
     turi.py a interpreter for pyturi bytecode
     Copyright (C) 2014  Leonard Göhrs
@@ -44,23 +46,22 @@ def interpret (prog, itpeio, otpeio):
     opcode=  opcodes [(prog[bz] & 0x0F)]
     argtype= argtypes[(prog[bz] & 0x30)]
     arg=None
-    arglen=1
+    oplen=1
     
     
     if (argtype=='NONE'):
       arg=None
-      arglen=1
+      oplen=1
     elif (argtype in ['REG', 'IREG']):
-      arg=prog[bz+1]
-      arglen=2
+      ba=bytearray([prog[bz+1]])
+      arg=struct.unpack("!B",ba)[0]
+      oplen=2
     elif (argtype=='CONST'):
-      arg =prog[bz+1]<<24
-      arg|=prog[bz+2]<<16
-      arg|=prog[bz+3]<<8
-      arg|=prog[bz+4]<<0
-      arglen=5
+      ba=bytearray(prog[bz+1:bz+5])
+      arg=struct.unpack("!l",ba)[0]
+      oplen=5
       
-    bz+=arglen
+    bz+=oplen
     
     if (opcode=='READ'):
       rde= itpeio.read(4)

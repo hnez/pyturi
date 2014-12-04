@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import struct
+
 """
     turi.py a assembler for pyturi bytecode
     Copyright (C) 2014  Leonard Göhrs
@@ -97,28 +99,33 @@ def tucompile(pinput):
   #assemble
   for i, op in enumerate(pinput):
     if ('o' in op):
+      #get argument type (at) and value (a)
       at, a= getargument(op)
       
       opcode=0
       opcode|=opcodes[op['o']]
       opcode|=at
       
+      #note where a command was placed, used for
+      #translation of the jump labels
       pinput[i]['p']=len(output)
       output.append(opcode)
       
       if (at in [argtypes['IREG'], argtypes['REG']]):
-        output.append(a)
+        #B -> uint8_t
+        binary=struct.pack('!B',a)
+        output+=binary
         
       if (at in [argtypes['CONST']]):
         if a is None:
+          #operand is a potentially unknown label
+          #place update note and set a to prevent confusion
           pinput[i]['u']=len(output)
           a=0
         
-        #Turi.py is Big-endian
-        output.append((a>>24)&0xFF)
-        output.append((a>>16)&0xFF)
-        output.append((a>>8)&0xFF)
-        output.append((a>>0)&0xFF)
+        #!l -> int32_t in network byte order
+        binary=struct.pack('!l',a)
+        output+=binary
   
   print ("Linking...")
   #link
@@ -127,12 +134,12 @@ def tucompile(pinput):
       label=op['a']
       res=tuple(filter(lambda x: 'l' in x and x['l'] == label, pinput))[0]
       a=res['p']
+      pos=op['u']
       
-      #Turi.py is Big-endian
-      output[op['u']+0]=(a>>24)&0xFF
-      output[op['u']+1]=(a>>16)&0xFF
-      output[op['u']+2]=(a>>8 )&0xFF
-      output[op['u']+3]=(a>>0 )&0xFF
+      #!l -> int32_t in network byte order
+      #replace placeholder with address
+      binary=struct.pack('!l',a)
+      output[pos:pos+3]=binary
     
   #print ('\n'.join(str(x) for x in pinput))
   #print (' '.join('{:02x}'.format(x) for x in output))
