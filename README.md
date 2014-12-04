@@ -30,6 +30,5 @@ itpe.tpe has to be created in advance, but can be an empty file.
 
     $touch itpe.tpe
 
-The tape files consist of an array of Big-Endian 32 bit unsigned
-integers, this is likely to change in the future as it is against
-the vturi specifications.
+The tape files consist of a list of numbers seperated by
+newlines. 
