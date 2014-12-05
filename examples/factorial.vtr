@@ -1,0 +1,23 @@
+INIT:
+   READ;       --input number
+   STORE R[0]; --Downcounter
+
+   LOAD 1;     --0! =1
+   STORE R[1]; --Result
+
+LOOP:
+   LOAD R[0];
+   JZERO QUIT; --Check for 0!
+
+   MUL R[1];   --Accumulator is downcounter
+   STORE R[1];
+
+   LOAD R[0]; 
+   SUB 1;      --Decrement Downcounter
+   STORE R[0];
+   JUMP LOOP;
+
+QUIT:
+   LOAD R[1];
+   WRITE;
+   HALT;
