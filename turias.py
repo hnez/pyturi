@@ -33,13 +33,13 @@ def parse(text):
     #separate labels, keep rest intact
     if(len(splt)==2):
       line=splt[1]
-      ret['l']=splt[0]
+      ret['l']=splt[0].upper()
     
     #separate arguments, keep opcode intact
     splt=line.split(' ',1)
     if(len(splt)==2):
       line=splt[0]
-      ret['a']=splt[1]
+      ret['a']=splt[1].upper()
     
     if(line):
       ret['o']=line.upper()
@@ -139,10 +139,10 @@ def tucompile(pinput):
       #!l -> int32_t in network byte order
       #replace placeholder with address
       binary=struct.pack('!l',a)
-      output[pos:pos+3]=binary
+      output[pos:pos+4]=binary
     
   #print ('\n'.join(str(x) for x in pinput))
-  #print (' '.join('{:02x}'.format(x) for x in output))
+  #print (' '.join('{:02x}'.format(x) for x in output)) 
   
   return (output)
 

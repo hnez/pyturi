@@ -109,9 +109,12 @@ def interpret (prog, itpeio, otpeio):
         
     if (opcode=='JUMP'):
       bz=arg
-    elif (opcode=='JZERO'):
-      if (acc==0): bz=arg
-    elif (opcode=='HALT'):
+
+    if (opcode=='JZERO'):
+      if (acc==0):
+        bz=arg
+
+    if (opcode=='HALT'):
       return
 
 def main (argv):
