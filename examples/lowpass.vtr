@@ -1,3 +1,9 @@
+-- lowpass.vtr 
+-- Takes a list of values from the input tape
+-- Prints current exponential mean values 
+-- to the output tape
+
+INIT:
    LOAD 0;
    STORE R[0];
    STORE R[1];

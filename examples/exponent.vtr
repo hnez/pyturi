@@ -1,0 +1,33 @@
+-- exponent.vtr 
+-- takes base as first value on the input tape
+-- and exponent as second value
+-- prints result to the output tape
+
+INIT:
+   READ;
+   STORE R[0]; --Store Base
+
+   READ;
+   STORE R[1]; --Store exponent
+
+   LOAD 1;
+   STORE R[2]; --Initialize result
+
+LOOP:
+   LOAD R[1];
+   JZERO QUIT; --Check Exponent downcounter
+
+   LOAD R[2];
+   MUL R[0];   --Multiply Result by Base
+   STORE R[2];
+
+   LOAD R[1];
+   SUB 1;      --Decrement Exponent
+   STORE R[1];
+   
+   JUMP LOOP;
+
+QUIT:
+   LOAD R[2];
+   WRITE;
+   HALT;

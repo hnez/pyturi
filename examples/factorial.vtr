@@ -1,3 +1,7 @@
+-- factorial.vtr 
+-- takes input value n from the input tape
+-- prints n factorial to the output tape
+
 INIT:
    READ;       --input number
    STORE R[0]; --Downcounter
