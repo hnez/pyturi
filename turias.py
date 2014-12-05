@@ -67,17 +67,17 @@ def parse(text):
   return (lines)
 
 def tucompile(pinput):
-  opcodes = {'READ': 0x08, 'WRITE':0x09,
-             'LOAD': 0x0A, 'STORE':0x0B,
-             'ADD' : 0x0C, 'SUB'  :0x0D,
-             'MUL' : 0x0E, 'DIV'  :0x0F,
-             'JUMP': 0x07, 'JZERO':0x06,
-            #'JPOS': 0x05, 'AND'  :0x04,
-            #'NOT' : 0x03, 'OR'   :0x02,
+  opcodes = {'READ': 0x08, 'WRITE': 0x09,
+             'LOAD': 0x0A, 'STORE': 0x0B,
+             'ADD' : 0x0C, 'SUB'  : 0x0D,
+             'MUL' : 0x0E, 'DIV'  : 0x0F,
+             'JUMP': 0x07, 'JZERO': 0x06,
+             'JNEG': 0x05, 'OR'   : 0x04,
+             'NOT' : 0x03, 'AND'  : 0x02,
              'HALT': 0x00}
              
-  argtypes ={'NONE': 0x00, 'CONST':0x10,
-             'REG' : 0x20, 'IREG' :0x30}
+  argtypes ={'NONE': 0x00, 'CONST': 0x10,
+             'REG' : 0x20, 'IREG' : 0x30}
   
   def getargument(pi):
     if ('a' not in pi):
@@ -126,7 +126,7 @@ def tucompile(pinput):
         #!l -> int32_t in network byte order
         binary=struct.pack('!l',a)
         output+=binary
-  
+
   print ("Linking...")
   #link
   for op in pinput:

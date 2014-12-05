@@ -28,8 +28,8 @@ def interpret (prog, itpeio, otpeio):
              0x0C: 'ADD' , 0x0D: 'SUB'  ,
              0x0E: 'MUL' , 0x0F: 'DIV'  ,
              0x07: 'JUMP', 0x06: 'JZERO',
-            #0x06: 'JPOS', 0x05: 'AND'  ,
-            #0x04: 'NOT' , 0x03: 'OR'   ,
+             0x05: 'JNEG', 0x04: 'OR',
+             0x03: 'NOT' , 0x02: 'AND',
              0x00: 'HALT'}
              
   argtypes ={0x00: 'NONE', 0x10: 'CONST',
@@ -91,8 +91,8 @@ def interpret (prog, itpeio, otpeio):
         reg[arg]=acc
       elif(argtype=='IREG'):
         reg[reg[arg]]=acc
-        
-    elif (opcode in ['ADD','SUB', 'MUL', 'DIV']):
+
+    elif (opcode in ['ADD','SUB', 'MUL', 'DIV', 'OR', 'AND']):
       if(argtype=='REG'):
         num=reg[arg]
       elif(argtype=='IREG'):
@@ -104,17 +104,34 @@ def interpret (prog, itpeio, otpeio):
       if(opcode=='SUB'): acc-=num
       if(opcode=='MUL'): acc*=num
       if(opcode=='DIV'): acc//=num
-        
+      if(opcode=='OR'):  acc&=num
+      if(opcode=='AND'): acc&=num
+
+    elif (opcode=='NOT'):
+      acc=~acc
+
     print ('{:6} | {:5} | {:08x} | {:08x} | {}'.format(opcode, argtype, arg or 0, acc,str(reg)))
         
-    if (opcode=='JUMP'):
-      bz=arg
+    if (opcode in ['JUMP', 'JZERO', 'JNEG']):
+      if(argtype=='REG'):
+        num=reg[arg]
+      elif(argtype=='IREG'):
+        num=reg[reg[arg]]
+      elif(argtype=='CONST'):
+        num=arg
 
-    if (opcode=='JZERO'):
-      if (acc==0):
-        bz=arg
+      if (opcode=='JUMP'):
+        bz=num
 
-    if (opcode=='HALT'):
+      if (opcode=='JNEG'):
+        if (acc<0):
+          bz=num
+
+      if (opcode=='JZERO'):
+        if (acc==0):
+          bz=num
+
+    elif (opcode=='HALT'):
       return
 
 def main (argv):
