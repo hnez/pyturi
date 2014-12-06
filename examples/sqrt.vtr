@@ -1,0 +1,62 @@
+-- sqrt.vtr
+-- takes input value n from the input tape
+-- prints square root to the output tape
+-- prints nothing if square root does not exist
+
+-- R[0] num to radix (x)
+-- R[1] lower
+-- R[2] upper
+-- R[3] mid
+
+INIT:
+   READ;        --number to take square root of (x)
+   STORE R[0];
+
+   JNEG ERROR;  --No Complex numbers
+
+   SUB 2;
+   JNEG SELF;   --Zero and one are their own square roots
+
+   STORE R[2];  --Set upper limit to x
+
+   LOAD 0;
+   STORE R[1];  --Set lower limit to 0
+
+LOOP:
+   LOAD R[1];   --Compare upper and
+   SUB R[2];    --lower value
+   JZERO ERROR; --There is no square root
+
+   LOAD R[1];
+   ADD R[2];
+   DIV 2;       --Get mean of upper and lower
+
+   STORE R[3];
+   MUL R[3];    --Get square of mean
+
+   SUB R[0];    --Compare to x
+
+   JZERO FOUND; --x==mid*mid
+   JNEG LOWER;
+GREATER:        --x>mid*mid
+   LOAD R[3];   --Mean is the new
+   STORE R[2];  -- upper limit
+   JUMP LOOP;
+LOWER:          --x<mid*mid
+   LOAD R[3];
+   ADD 1;       --Divide by two allways rounds down
+   STORE R[1];  --Mean is the new lower limit
+   JUMP LOOP;
+
+SELF:
+   LOAD R[0];   --Get zero or one
+   STORE R[3];  --Set as result
+   JUMP FOUND;
+
+FOUND:
+   LOAD R[3];
+   WRITE;       --Print square root
+   HALT;
+
+ERROR:
+   HALT;
