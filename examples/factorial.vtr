@@ -6,6 +6,8 @@ INIT:
    READ;       --input number
    STORE R[0]; --Downcounter
 
+   JNEG ERROR; --Negative factorials are not defined
+
    LOAD 1;     --0! =1
    STORE R[1]; --Result
 
@@ -24,4 +26,7 @@ LOOP:
 QUIT:
    LOAD R[1];
    WRITE;
+   HALT;
+
+ERROR:
    HALT;
